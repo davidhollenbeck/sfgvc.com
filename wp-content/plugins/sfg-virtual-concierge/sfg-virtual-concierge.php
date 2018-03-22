@@ -16,6 +16,19 @@ defined( 'ABSPATH' ) or die( 'You will have to try harder than that.' );
 
 // SFG Custom Plugin
 
+$plugin_url = WP_PLUGIN_URL . '/sfg-virtual-concierge';
+
+
+
+/*
+ * TO DO:
+ *  1. Add media upload to admin dashboard and trigger update_db_row when a media item is uploaded.
+ *      a. build out front end for admin dashboard area
+ *      b. integrate wordpress media uploader and add id to each section https://mycyberuniverse.com/integration-wordpress-media-uploader-plugin-options-page.html
+ *  2. Create functions to render HTML for each table
+ *  3. Move to front end
+ *  4. Build out back end dashboard area for notifications
+ */
 class SFG_Media {
 	public $table_name;
 	public $id;
@@ -38,6 +51,73 @@ class SFG_Media {
 		$this->link = $db_row->link;
 		$this->target = $db_row->target;
 		$this->icon_url = $db_row->icon_url;
+	}
+
+	public function update_db_row($Table, $Id, $Text = null, $Media_Url = null, $Link = null, $Target = null, $Icon_Url = null)
+	{
+		global $wpdb;
+
+		$this->table_name = $table_name = $wpdb->prefix . $Table;
+
+		if ($Text !== null)
+		{
+			$wpdb->update(
+				$this->table_name,
+				array(
+					'text' => $Text
+				),
+				array( 'id' => $Id)
+
+			);
+		}
+
+		if ($Media_Url !== null)
+		{
+			$wpdb->update(
+				$this->table_name,
+				array(
+					'media_url' => $Media_Url
+				),
+				array( 'id' => $Id)
+
+			);
+		}
+
+		if ($Link !== null)
+		{
+			$wpdb->update(
+				$this->table_name,
+				array(
+					'link' => $Link
+				),
+				array( 'id' => $Id)
+
+			);
+		}
+
+		if ($Target !== null)
+		{
+			$wpdb->update(
+				$this->table_name,
+				array(
+					'target' => $Target
+				),
+				array( 'id' => $Id)
+
+			);
+		}
+
+		if ($Icon_Url !== null)
+		{
+			$wpdb->update(
+				$this->table_name,
+				array(
+					'icon_url' => $Icon_Url
+				),
+				array( 'id' => $Id)
+
+			);
+		}
 	}
 
 	private function get_row_by_id($table, $id)
@@ -150,43 +230,24 @@ function sfg_db_install_data( $table, $rows) {
 function sfg_activate_test_data() {
 	global $wpdb;
 
-	sfg_test_data( $wpdb->prefix . 'home_button');
-	sfg_test_data( $wpdb->prefix . 'advert');
-	sfg_test_data( $wpdb->prefix . 'concessions');
-	sfg_test_data($wpdb->prefix . 'tv_guide');
-	sfg_test_data($wpdb->prefix . 'maps');
-	sfg_test_data($wpdb->prefix . 'stats');
-	sfg_test_data($wpdb->prefix . 'schedule');
-	sfg_test_data($wpdb->prefix . 'logo');
+	sfg_test_data( 'sfg_home_button');
+	sfg_test_data( 'sfg_advert');
+	sfg_test_data( 'sfg_concessions');
+	sfg_test_data('sfg_tv_guide');
+	sfg_test_data('sfg_maps');
+	sfg_test_data('sfg_stats');
+	sfg_test_data('sfg_schedule');
+	sfg_test_data('sfg_logo');
 }
 
-//add_action('template_redirect', 'sfg_activate_test_data');
+add_action('template_redirect', 'sfg_activate_test_data');
 
-function sfg_test_data( $table_name )
+function sfg_test_data($table)
 {
-	global $wpdb;
 
-	$welcome_text = $table_name . ' installation complete';
-	$name = "name-test";
-	$media_url = get_stylesheet_directory_uri() . "/assets/Image_1.png";
-	$icon_url = get_stylesheet_directory_uri() . "/assets/Icon_1.png";
-	$link = 'localhost:8888/sfgvc.com/wp-content/uploads/2018/test.jpg';
-	$target = '_blank';
-
-	$wpdb->insert(
-		$table_name,
-		array(
-			'time' => current_time('mysql'),
-			'name' => $name,
-			'text' => $welcome_text,
-			'media_url' => $media_url,
-			'icon_url' => $icon_url,
-			'link' => $link,
-			'target' => $target
-		)
-	);
+	$media = new SFG_Media();
+	$media->update_db_row($table, 1, 'yoop', get_stylesheet_directory_uri() . "/assets/Image_1.png", '#', '_blank', '#');
 }
-
 
 // Customize Login Page
 
@@ -228,29 +289,13 @@ function sfg_homepage()
 	*/
 
 	$button = new SFG_Media;
-	$button->get_db_row('advert','4');
+	$button->get_db_row('sfg_advert','4');
 
 	$html = $html . "<div class='sfg-hp-button'><img src='" . $button->media_url .  "' /><p>" . $button->text . "</p></div>";
 
 	return $html;
 }
 
-
-
-// Admin Area
-
-add_action( 'admin_menu', 'sfg_add_dashboard' );
-
-function sfg_add_dashboard()
-{
-	add_menu_page( 'Virtual Concierge', 'Virtual Concierge', 'manage_options', 'sfg_dashboard', 'sfg_dashboard', 'dashicons-layout', 3);
-}
-
-function sfg_dashboard()
-{
-	// add display wrapper for tabs and logo
-	echo "<p>henlo</p>";
-};
 
 // Manage User Permissions
 
@@ -262,4 +307,448 @@ function redirect_to_login(){
 		//wp_redirect( get_home_url() . '/login/', 301 );
 
 	}
+}
+
+// Admin Area
+
+//add dashboard page to the plugin area
+function sfg_add_dashboard()
+{
+	add_menu_page(
+		'Virtual Concierge',
+		'Virtual Concierge',
+		'manage_options',
+		'sfg_dashboard',
+		'sfg_dashboard_display',
+		'dashicons-layout',
+		0
+	);
+}
+add_action( 'admin_menu', 'sfg_add_dashboard' );
+
+//add dashboard display and style
+function sfg_dashboard_display()
+{
+	global $plugin_url;
+
+	if( isset( $_POST['sfg_media_form_submitted'])) {
+
+		$hidden_field = esc_html($_POST['sfg_media_form_submitted']);
+
+		if($hidden_field == 'Y' ) {
+			$sfg_media = esc_html( $_POST['sfg_media']);
+		}
+
+		echo $sfg_media;
+	}
+
+	if( !current_user_can('manage_options')) {
+
+		wp_die('You are not supposed to be here');
+
+	}
+	// add display wrapper for tabs and logo
+	require( 'inc/options-page-wrapper.php' );
+};
+
+function sfg_dashboard_style() {
+	wp_enqueue_style('sfg_dashboard_style', plugins_url( '/sfg-virtual-concierge/style.css' ) );
+}
+add_action('admin_head', 'sfg_dashboard_style');
+
+function sfg_load_scripts_admin() {
+	global $plugin_url;
+
+	wp_enqueue_media();
+	wp_enqueue_script( 'sfg-admin', $plugin_url . '/js/sfg-admin.js', array( 'jquery' ), '1.0.0', true );
+}
+add_action('admin_enqueue_scripts', 'sfg_load_scripts_admin');
+
+// Remove some features
+
+add_filter( 'media_library_show_audio_playlist', function() { return false; });
+add_filter( 'media_library_show_video_playlist', function() { return false; });
+add_filter( 'media_library_show_gallery', function() { return false; });
+
+
+// Default Options
+
+function sfg_home_button_default_options() {
+	$defaults = array(
+		'concessions_button_url' => '',
+		'concessions_button_img' => ''
+	);
+
+	return apply_filters( 'sfg_home_button_default_options', $defaults);
+}
+
+function sfg_advert_default_options() {
+	$defaults = array(
+		'ad1_url' => ''
+	);
+
+	return apply_filters( 'sfg_advert_default_options', $defaults);
+}
+
+
+function sfg_dashboard_init() {
+
+	// Home Button Options
+
+	if( false == get_option('sfg_home_button_options')) {
+		add_option('sfg_home_button_options', apply_filters( 'sfg_home_button_default_options', sfg_home_button_default_options() ) );
+	}
+
+	add_settings_section(
+		'sfg_home_button_settings_section',          // ID used to identify this section and with which to register options
+		'Home Page Buttons',                   // Title to be displayed on the administration page
+		'sfg_home_button_options_callback',  // Callback used to render the description of the section
+		'sfg_home_button_options'      // Page on which to add this section of options
+	);
+
+
+	add_settings_field(
+		'concessions_img',
+		'Food & Beverage Button Image',
+		'sfg_home_button_img_callback',
+		'sfg_home_button_options',
+		'sfg_home_button_settings_section',
+		'concessions_img'
+	);
+
+	add_settings_field(
+		'tv_guide_img',
+		'TV Guide Button Image',
+		'sfg_home_button_img_callback',
+		'sfg_home_button_options',
+		'sfg_home_button_settings_section',
+		'tv_guide_img'
+	);
+
+	add_settings_field(
+		'maps_img',
+		'Maps Button Image',
+		'sfg_home_button_img_callback',
+		'sfg_home_button_options',
+		'sfg_home_button_settings_section',
+		'maps_img'
+	);
+
+	add_settings_field(
+		'concierge_img',
+		'Concierge Button Image',
+		'sfg_home_button_img_callback',
+		'sfg_home_button_options',
+		'sfg_home_button_settings_section',
+		'concierge_img'
+	);
+
+	add_settings_field(
+		'photog_img',
+		'Request Photographer Button Image',
+		'sfg_home_button_img_callback',
+		'sfg_home_button_options',
+		'sfg_home_button_settings_section',
+		'photog_img'
+	);
+
+	add_settings_field(
+		'giants_az_img',
+		'Giants A-Z Button Image',
+		'sfg_home_button_img_callback',
+		'sfg_home_button_options',
+		'sfg_home_button_settings_section',
+		'giants_az_img'
+	);
+
+	add_settings_field(
+		'stats_img',
+		'Stats & Notes Button Image',
+		'sfg_home_button_img_callback',
+		'sfg_home_button_options',
+		'sfg_home_button_settings_section',
+		'stats_img'
+	);
+
+	add_settings_field(
+		'events_img',
+		'Events Schedule Button Image',
+		'sfg_home_button_img_callback',
+		'sfg_home_button_options',
+		'sfg_home_button_settings_section',
+		'events_img'
+	);
+
+	add_settings_field(
+		'feedback_img',
+		'Feedback Button Image',
+		'sfg_home_button_img_callback',
+		'sfg_home_button_options',
+		'sfg_home_button_settings_section',
+		'feedback_img'
+	);
+
+	add_settings_field(
+		'internet_img',
+		'Go To Internet Button Image',
+		'sfg_home_button_img_callback',
+		'sfg_home_button_options',
+		'sfg_home_button_settings_section',
+		'internet_img'
+	);
+
+	register_setting(
+		'sfg_home_button_options',
+		'sfg_home_button_options',
+		'sfg_sanitize_input'
+	);
+	// add settings sections
+
+	// TV Guide
+	// Maps
+	// Contact Concierge
+	// Request Photographer
+	// Giants A-Z
+	// Stats & Notes
+	// Events Schedule
+	// Go To Internet
+	// Feedback Form
+
+
+	// Adverts
+
+	if( false == get_option('sfg_advert_options')) {
+		add_option('sfg_advert_options', apply_filters('sfg_advert_default_options', sfg_advert_default_options()));
+	}
+
+	add_settings_section(
+		'sfg_advert_settings_section',
+		'Advertisements',
+		'sfg_advert_options_callback',
+		'sfg_advert_options'
+	);
+
+
+	add_settings_field(
+		'ad1_url',
+		'Ad 1 Url',
+		'sfg_advert_ad1_callback',
+		'sfg_advert_options',
+		'sfg_advert_settings_section'
+	);
+
+	register_setting(
+		'sfg_advert_options',
+		'sfg_advert_options',
+		'sfg_sanitize_url_options'
+	);
+
+	if( false == get_option('sfg_concessions_options')) {
+		add_option('sfg_concessions_options');
+	}
+
+	add_settings_section(
+		'sfg_concessions_settings_section',
+		'Advertisements',
+		'sfg_concessions_options_callback',
+		'sfg_concessions_options'
+	);
+
+
+	add_settings_field(
+		'food_url',
+		'Food Url',
+		'sfg_concessions_food_callback',
+		'sfg_concessions_options',
+		'sfg_concessions_settings_section'
+	);
+
+	register_setting(
+		'sfg_concessions_options',
+		'sfg_concessions_options',
+		'sfg_validate_input'
+	);
+
+	if( false == get_option('sfg_tv_guide_options')) {
+		add_option('sfg_tv_guide_options');
+	}
+
+	if( false == get_option('sfg_maps_options')) {
+		add_option('sfg_maps_options');
+	}
+
+	if( false == get_option('sfg_stats_options')) {
+		add_option('sfg_stats_options');
+	}
+
+	if( false == get_option('sfg_schedule_options')) {
+		add_option('sfg_schedule_options');
+	}
+
+	if( false == get_option('sfg_logo_options')) {
+		add_option('sfg_logo_options');
+	}
+
+
+	add_settings_section(
+		'sfg_concessions_settings_section',
+		'Concessions Menus',
+		'sfg_concessions_options_callback',
+		'sfg_concessions_options'
+	);
+
+	add_settings_section(
+		'sfg_tv_guide_settings_section',
+		'TV Guide',
+		'sfg_tv_guide_options_callback',
+		'sfg_tv_guide_options'
+	);
+
+	add_settings_section(
+		'sfg_maps_settings_section',
+		'Maps',
+		'sfg_maps_options_callback',
+		'sfg_maps_options'
+	);
+
+	add_settings_section(
+		'sfg_stats_settings_section',
+		'Statistics',
+		'sfg_stats_options_callback',
+		'sfg_stats_options'
+	);
+
+	add_settings_section(
+		'sfg_schedule_settings_section',
+		'Schedule',
+		'sfg_schedule_options_callback',
+		'sfg_schedule_options'
+	);
+
+	add_settings_section(
+		'sfg_logo_settings_section',
+		'Logo',
+		'sfg_logo_options_callback',
+		'sfg_logo_options'
+	);
+}
+add_action('admin_init', 'sfg_dashboard_init');
+
+
+// Home Button Callbacks
+
+function sfg_home_button_options_callback() {
+	echo '<p>home button callback</p>';
+}
+
+
+function sfg_sanitize_url_options( $input ) {
+	$output = array();
+
+	foreach( $input as $key => $val ) {
+		if( isset ( $input[$key] ) ) {
+			$output[$key] = esc_url_raw( strip_tags( stripslashes( $input[$key] ) ) );
+		}
+	}
+
+	return apply_filters('sfg_sanitize_url_options', $output, $input);
+}
+
+function sfg_validate_input( $input ) {
+	$output = array();
+
+	foreach( $input as $key => $val ) {
+		if( isset ( $input[$key] ) ) {
+			$output[$key] =  strip_tags( stripslashes( $input[$key] ) );
+		}
+	}
+
+	return $output;
+}
+
+function sfg_concessions_button_url_callback() {
+	$options = get_option('sfg_home_button_options');
+	$url = '';
+	if( isset( $options['concessions_button_url'] ) ) {
+		$url = $options['concessions_button_url'];
+	}
+
+	echo '<input type="text" id="concessions_button_url" name="sfg_home_button_options[concessions_button_url]" value="' . $url . '" />';
+}
+
+function sfg_home_button_img_callback( $name ) {
+	$options = get_option('sfg_home_button_options');
+	$default = plugins_url('img/default.jpg', __FILE__);
+
+	if ( !empty( $options[$name] ) ) {
+		$src = wp_get_attachment_image_src( $options[$name] )[0];
+		$value = $options[$name];
+	} else {
+		$src = $default;
+		$value = '';
+	}
+
+	$text = "Change Image";
+
+	echo '
+		<div class="upload">
+			<img src="' . $src . '" style="max-width:300px;" />
+			<div>
+				<input type="hidden" name="sfg_home_button_options[' . $name . ']" id="sfg_home_button_options[' . $name . ']" value="' . $value . '" />
+				<button type="submit" class="upload_image_button button">' . $text . '</button>
+			</div>
+		</div>
+			
+	';
+}
+
+function sfg_advert_ad1_callback() {
+	$options = get_option('sfg_advert_options');
+	$url = '';
+	if( isset( $options['ad1_url'] ) ) {
+		$url = $options['ad1_url'];
+	}
+
+	echo '<input type="text" id="ad1_url" name="sfg_advert_options[ad1_url]" value="' . $url . '" />';
+}
+
+// other callbacks
+
+function sfg_advert_options_callback() {
+	echo '<p>advert callback</p>';
+}
+
+function sfg_concessions_options_callback() {
+	echo '<p>concessions button callback</p>';
+}
+
+function sfg_concessions_food_callback() {
+	$options = get_option( 'sfg_concessions_options');
+
+	$url = '';
+	if ( isset( $options['food_url'] ) ) {
+		$url = $options['food_url'];
+	}
+
+	echo '<input type="text" id="food_url" name="sfg_concessions_options[food_url]" value="' . $url . '" />';
+}
+
+function sfg_tv_guide_options_callback() {
+	echo '<p>tv guide button callback</p>';
+}
+
+function sfg_maps_options_callback() {
+	echo '<p>maps button callback</p>';
+}
+
+function sfg_stats_options_callback() {
+	echo '<p>stats button callback</p>';
+}
+
+function sfg_schedule_options_callback() {
+	echo '<p>schedule button callback</p>';
+}
+
+function sfg_logo_options_callback() {
+	echo '<p>logo button callback</p>';
 }
