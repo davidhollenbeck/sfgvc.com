@@ -13,9 +13,10 @@
 <p>Here is the field:</p>
 <br/>
 
-<p><?php echo $home_button_options['concessions_button_url'] ? $home_button_options['concessions_button_url'] : ''; ?></p>
+
 <p><?php echo $advert_options['ad1_url'] ? $advert_options['ad1_url'] : ''; ?></p>
-<p><?php echo sanitize_text_field($concessions_options['food_url'] ? $concessions_options['food_url'] : ''); ?></p>
+<p><?php echo sanitize_text_field($concessions_options['food_pdf'] ? $concessions_options['food_pdf'] : ''); ?></p>
+    <p><?php echo $concessions_options['food_pdf'] ? $concessions_options['food_pdf'] : ''; ?></p>
 
 <?php
 

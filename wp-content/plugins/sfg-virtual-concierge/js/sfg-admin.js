@@ -22,4 +22,6 @@
         }
         return false;
     });
+
+    _wpMediaViewsL10n.insertIntoPost = 'Use This Image';
 })( jQuery );

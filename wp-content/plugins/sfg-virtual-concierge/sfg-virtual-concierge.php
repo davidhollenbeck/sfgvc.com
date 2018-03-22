@@ -502,18 +502,6 @@ function sfg_dashboard_init() {
 		'sfg_home_button_options',
 		'sfg_sanitize_input'
 	);
-	// add settings sections
-
-	// TV Guide
-	// Maps
-	// Contact Concierge
-	// Request Photographer
-	// Giants A-Z
-	// Stats & Notes
-	// Events Schedule
-	// Go To Internet
-	// Feedback Form
-
 
 	// Adverts
 
@@ -528,20 +516,49 @@ function sfg_dashboard_init() {
 		'sfg_advert_options'
 	);
 
-
 	add_settings_field(
 		'ad1_url',
 		'Ad 1 Url',
-		'sfg_advert_ad1_callback',
+		'sfg_advert_text_callback',
 		'sfg_advert_options',
-		'sfg_advert_settings_section'
+		'sfg_advert_settings_section',
+		'ad1_url'
+	);
+
+	add_settings_field(
+		'ad1_img',
+		'Ad 1 Image',
+		'sfg_advert_img_callback',
+		'sfg_advert_options',
+		'sfg_advert_settings_section',
+		'ad1_img'
+	);
+
+	add_settings_field(
+		'ad2_url',
+		'Ad 2 Url',
+		'sfg_advert_text_callback',
+		'sfg_advert_options',
+		'sfg_advert_settings_section',
+		'ad2_url'
+	);
+
+	add_settings_field(
+		'ad2_img',
+		'Ad 2 Image',
+		'sfg_advert_img_callback',
+		'sfg_advert_options',
+		'sfg_advert_settings_section',
+		'ad2_img'
 	);
 
 	register_setting(
 		'sfg_advert_options',
 		'sfg_advert_options',
-		'sfg_sanitize_url_options'
+		'sfg_sanitize_input'
 	);
+
+	// Concessions
 
 	if( false == get_option('sfg_concessions_options')) {
 		add_option('sfg_concessions_options');
@@ -549,18 +566,27 @@ function sfg_dashboard_init() {
 
 	add_settings_section(
 		'sfg_concessions_settings_section',
-		'Advertisements',
+		'Concessions Menus',
 		'sfg_concessions_options_callback',
 		'sfg_concessions_options'
 	);
 
+	add_settings_field(
+		'food_pdf',
+		'Food Menu',
+		'sfg_concessions_pdf_callback',
+		'sfg_concessions_options',
+		'sfg_concessions_settings_section',
+		'food_pdf'
+	);
 
 	add_settings_field(
-		'food_url',
-		'Food Url',
-		'sfg_concessions_food_callback',
+		'beverage_pdf',
+		'Beverage Menu',
+		'sfg_concessions_pdf_callback',
 		'sfg_concessions_options',
-		'sfg_concessions_settings_section'
+		'sfg_concessions_settings_section',
+		'beverage_pdf'
 	);
 
 	register_setting(
@@ -569,9 +595,42 @@ function sfg_dashboard_init() {
 		'sfg_validate_input'
 	);
 
+	// TV Guide
+
 	if( false == get_option('sfg_tv_guide_options')) {
 		add_option('sfg_tv_guide_options');
 	}
+
+	add_settings_section(
+		'sfg_tv_guide_settings_section',
+		'TV Guide',
+		'sfg_tv_guide_options_callback',
+		'sfg_tv_guide_options'
+	);
+
+	add_settings_field(
+		'tv_guide_pdf',
+		'TV Guide PDF',
+		'sfg_tv_guide_pdf_callback',
+		'sfg_tv_guide_options',
+		'sfg_tv_guide_settings_section',
+		'tv_guide_pdf'
+	);
+
+	register_setting(
+		'sfg_tv_guide_options',
+		'sfg_tv_guide_options',
+		'sfg_validate_input'
+	);
+
+	// Maps sfg_maps_pdf_callback
+	// Contact Concierge
+	// Request Photographer
+	// Giants A-Z
+	// Stats & Notes
+	// Events Schedule
+	// Go To Internet
+	// Feedback Form
 
 	if( false == get_option('sfg_maps_options')) {
 		add_option('sfg_maps_options');
@@ -590,19 +649,6 @@ function sfg_dashboard_init() {
 	}
 
 
-	add_settings_section(
-		'sfg_concessions_settings_section',
-		'Concessions Menus',
-		'sfg_concessions_options_callback',
-		'sfg_concessions_options'
-	);
-
-	add_settings_section(
-		'sfg_tv_guide_settings_section',
-		'TV Guide',
-		'sfg_tv_guide_options_callback',
-		'sfg_tv_guide_options'
-	);
 
 	add_settings_section(
 		'sfg_maps_settings_section',
@@ -637,9 +683,190 @@ add_action('admin_init', 'sfg_dashboard_init');
 
 // Home Button Callbacks
 
-function sfg_home_button_options_callback() {
-	echo '<p>home button callback</p>';
+function sfg_home_button_img_callback( $name ) {
+	$options = get_option('sfg_home_button_options');
+	$default = plugins_url('img/default.jpg', __FILE__);
+
+	if ( !empty( $options[$name] ) ) {
+		$src = wp_get_attachment_image_src( $options[$name] )[0];
+		$value = $options[$name];
+	} else {
+		$src = $default;
+		$value = '';
+	}
+
+	$text = "Change Image";
+
+	echo '
+		<div class="upload">
+			<img src="' . $src . '" style="max-width:150px;" />
+			<div>
+				<input type="hidden" name="sfg_home_button_options[' . $name . ']" id="sfg_home_button_options[' . $name . ']" value="' . $value . '" />
+				<button type="submit" class="upload_image_button button">' . $text . '</button>
+			</div>
+		</div>
+			
+	';
 }
+
+// Advertisement Callbacks
+
+function sfg_advert_text_callback( $name) {
+	$options = get_option('sfg_advert_options');
+	$url = '';
+	if( isset( $options[$name] ) ) {
+		$url = $options[$name];
+	}
+
+	echo '<input type="text" id="' . $name . ' " name="sfg_advert_options' . '[' . $name . ']" value="' . $url . '" />';
+}
+
+function sfg_advert_img_callback( $name ) {
+	$options = get_option('sfg_advert_options');
+	$default = plugins_url('img/default.jpg', __FILE__);
+
+	if ( !empty( $options[$name] ) ) {
+		$src = wp_get_attachment_image_src( $options[$name] )[0];
+		$value = $options[$name];
+	} else {
+		$src = $default;
+		$value = '';
+	}
+
+	$text = "Change Image";
+
+	echo '
+		<div class="upload">
+			<img src="' . $src . '" style="max-width:150px;" />
+			<div>
+				<input type="hidden" name="sfg_advert_options[' . $name . ']" id="sfg_advert_options[' . $name . ']" value="' . $value . '" />
+				<button type="submit" class="upload_image_button button">' . $text . '</button>
+			</div>
+		</div>
+			
+	';
+}
+
+// Concessions Callback
+
+function sfg_concessions_pdf_callback( $name ) {
+	$options = get_option('sfg_concessions_options');
+	$default = plugins_url('img/default.jpg', __FILE__);
+
+	if ( !empty( $options[$name] ) ) {
+		$src = wp_get_attachment_url( $options[$name] );
+		$value = $options[$name];
+	} else {
+		$src = $default;
+		$value = '';
+	}
+
+	$text = "Change PDF";
+
+	echo '
+		<div class="upload">
+			<img src="' . $src . '" style="max-width:150px;" />
+			<div>
+				<input type="hidden" name="sfg_concessions_options[' . $name . ']" id="sfg_concessions_options[' . $name . ']" value="' . $value . '" />
+				<button type="submit" class="upload_image_button button">' . $text . '</button>
+			</div>
+		</div>
+			
+	';
+}
+
+// TV Guide Callback
+
+
+function sfg_tv_guide_pdf_callback( $name ) {
+	$options = get_option('sfg_tv_guide_options');
+	$default = plugins_url('img/default.jpg', __FILE__);
+
+	if ( !empty( $options[$name] ) ) {
+		$src = wp_get_attachment_image_src( $options[$name] )[0];
+		$value = $options[$name];
+	} else {
+		$src = $default;
+		$value = '';
+	}
+
+	$text = "Change PDF";
+
+	echo '
+		<div class="upload">
+			<img src="' . $src . '" style="max-width:150px;" />
+			<div>
+				<input type="hidden" name="sfg_tv_guide_options[' . $name . ']" id="sfg_tv_guide_options[' . $name . ']" value="' . $value . '" />
+				<button type="submit" class="upload_image_button button">' . $text . '</button>
+			</div>
+		</div>
+			
+	';
+}
+
+// Maps Callback
+
+function sfg_maps_pdf_callback( $name ) {
+	$options = get_option('sfg_maps_options');
+	$default = plugins_url('img/default.jpg', __FILE__);
+
+	if ( !empty( $options[$name] ) ) {
+		$src = wp_get_attachment_image_src( $options[$name] )[0];
+		$value = $options[$name];
+	} else {
+		$src = $default;
+		$value = '';
+	}
+
+	$text = "Change PDF";
+
+	echo '
+		<div class="upload">
+			<img src="' . $src . '" style="max-width:150px;" />
+			<div>
+				<input type="hidden" name="sfg_maps_options[' . $name . ']" id="sfg_maps_options[' . $name . ']" value="' . $value . '" />
+				<button type="submit" class="upload_image_button button">' . $text . '</button>
+			</div>
+		</div>
+			
+	';
+}
+
+// Callbacks for options headings (required for register settings default function)
+
+function sfg_home_button_options_callback() {
+//
+}
+
+function sfg_advert_options_callback() {
+//
+}
+
+function sfg_concessions_options_callback() {
+//
+}
+
+function sfg_tv_guide_options_callback() {
+//
+}
+
+function sfg_maps_options_callback() {
+//
+}
+
+function sfg_stats_options_callback() {
+//
+}
+
+function sfg_schedule_options_callback() {
+//
+}
+
+function sfg_logo_options_callback() {
+//
+}
+
+// Input Validation
 
 
 function sfg_sanitize_url_options( $input ) {
@@ -666,89 +893,3 @@ function sfg_validate_input( $input ) {
 	return $output;
 }
 
-function sfg_concessions_button_url_callback() {
-	$options = get_option('sfg_home_button_options');
-	$url = '';
-	if( isset( $options['concessions_button_url'] ) ) {
-		$url = $options['concessions_button_url'];
-	}
-
-	echo '<input type="text" id="concessions_button_url" name="sfg_home_button_options[concessions_button_url]" value="' . $url . '" />';
-}
-
-function sfg_home_button_img_callback( $name ) {
-	$options = get_option('sfg_home_button_options');
-	$default = plugins_url('img/default.jpg', __FILE__);
-
-	if ( !empty( $options[$name] ) ) {
-		$src = wp_get_attachment_image_src( $options[$name] )[0];
-		$value = $options[$name];
-	} else {
-		$src = $default;
-		$value = '';
-	}
-
-	$text = "Change Image";
-
-	echo '
-		<div class="upload">
-			<img src="' . $src . '" style="max-width:300px;" />
-			<div>
-				<input type="hidden" name="sfg_home_button_options[' . $name . ']" id="sfg_home_button_options[' . $name . ']" value="' . $value . '" />
-				<button type="submit" class="upload_image_button button">' . $text . '</button>
-			</div>
-		</div>
-			
-	';
-}
-
-function sfg_advert_ad1_callback() {
-	$options = get_option('sfg_advert_options');
-	$url = '';
-	if( isset( $options['ad1_url'] ) ) {
-		$url = $options['ad1_url'];
-	}
-
-	echo '<input type="text" id="ad1_url" name="sfg_advert_options[ad1_url]" value="' . $url . '" />';
-}
-
-// other callbacks
-
-function sfg_advert_options_callback() {
-	echo '<p>advert callback</p>';
-}
-
-function sfg_concessions_options_callback() {
-	echo '<p>concessions button callback</p>';
-}
-
-function sfg_concessions_food_callback() {
-	$options = get_option( 'sfg_concessions_options');
-
-	$url = '';
-	if ( isset( $options['food_url'] ) ) {
-		$url = $options['food_url'];
-	}
-
-	echo '<input type="text" id="food_url" name="sfg_concessions_options[food_url]" value="' . $url . '" />';
-}
-
-function sfg_tv_guide_options_callback() {
-	echo '<p>tv guide button callback</p>';
-}
-
-function sfg_maps_options_callback() {
-	echo '<p>maps button callback</p>';
-}
-
-function sfg_stats_options_callback() {
-	echo '<p>stats button callback</p>';
-}
-
-function sfg_schedule_options_callback() {
-	echo '<p>schedule button callback</p>';
-}
-
-function sfg_logo_options_callback() {
-	echo '<p>logo button callback</p>';
-}
