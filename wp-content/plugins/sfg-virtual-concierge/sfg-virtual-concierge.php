@@ -624,6 +624,11 @@ function sfg_dashboard_init() {
 	);
 
 	// Maps sfg_maps_pdf_callback
+	
+	if( false == get_option('sfg_maps_options')) {
+		add_option('sfg_maps_options');
+	}
+
 	// Contact Concierge
 	// Request Photographer
 	// Giants A-Z
@@ -631,10 +636,6 @@ function sfg_dashboard_init() {
 	// Events Schedule
 	// Go To Internet
 	// Feedback Form
-
-	if( false == get_option('sfg_maps_options')) {
-		add_option('sfg_maps_options');
-	}
 
 	if( false == get_option('sfg_stats_options')) {
 		add_option('sfg_stats_options');
@@ -771,7 +772,6 @@ function sfg_concessions_pdf_callback( $name ) {
 				<button type="submit" class="upload_image_button button">' . $text . '</button>
 			</div>
 		</div>
-			
 	';
 }
 
@@ -783,7 +783,7 @@ function sfg_tv_guide_pdf_callback( $name ) {
 	$default = plugins_url('img/default.jpg', __FILE__);
 
 	if ( !empty( $options[$name] ) ) {
-		$src = wp_get_attachment_image_src( $options[$name] )[0];
+		$src = wp_get_attachment_url( $options[$name] );
 		$value = $options[$name];
 	} else {
 		$src = $default;
@@ -811,7 +811,7 @@ function sfg_maps_pdf_callback( $name ) {
 	$default = plugins_url('img/default.jpg', __FILE__);
 
 	if ( !empty( $options[$name] ) ) {
-		$src = wp_get_attachment_image_src( $options[$name] )[0];
+		$src = wp_get_attachment_url( $options[$name] );
 		$value = $options[$name];
 	} else {
 		$src = $default;
@@ -828,7 +828,6 @@ function sfg_maps_pdf_callback( $name ) {
 				<button type="submit" class="upload_image_button button">' . $text . '</button>
 			</div>
 		</div>
-			
 	';
 }
 
