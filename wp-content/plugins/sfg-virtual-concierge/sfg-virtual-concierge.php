@@ -623,33 +623,11 @@ function sfg_dashboard_init() {
 		'sfg_validate_input'
 	);
 
-	// Maps sfg_maps_pdf_callback
-	
+	// Maps
+
 	if( false == get_option('sfg_maps_options')) {
 		add_option('sfg_maps_options');
 	}
-
-	// Contact Concierge
-	// Request Photographer
-	// Giants A-Z
-	// Stats & Notes
-	// Events Schedule
-	// Go To Internet
-	// Feedback Form
-
-	if( false == get_option('sfg_stats_options')) {
-		add_option('sfg_stats_options');
-	}
-
-	if( false == get_option('sfg_schedule_options')) {
-		add_option('sfg_schedule_options');
-	}
-
-	if( false == get_option('sfg_logo_options')) {
-		add_option('sfg_logo_options');
-	}
-
-
 
 	add_settings_section(
 		'sfg_maps_settings_section',
@@ -658,12 +636,82 @@ function sfg_dashboard_init() {
 		'sfg_maps_options'
 	);
 
+	add_settings_field(
+		'suite_layout_pdf',
+		'Suite Layout',
+		'sfg_maps_pdf_callback',
+		'sfg_maps_options',
+		'sfg_maps_settings_section',
+		'suite_layout_pdf'
+	);
+
+	add_settings_field(
+		'suite_level1_pdf',
+		'Suite Level Map Suites 1-31 PDF',
+		'sfg_maps_pdf_callback',
+		'sfg_maps_options',
+		'sfg_maps_settings_section',
+		'suite_level1_pdf'
+	);
+
+	add_settings_field(
+		'suite_level2_pdf',
+		'Suite Level Map Suites 32-67 PDF',
+		'sfg_maps_pdf_callback',
+		'sfg_maps_options',
+		'sfg_maps_settings_section',
+		'suite_level2_pdf'
+	);
+
+	add_settings_field(
+		'ballpark_pdf',
+		'Ballpark Map PDF',
+		'sfg_maps_pdf_callback',
+		'sfg_maps_options',
+		'sfg_maps_settings_section',
+		'ballpark_pdf'
+	);
+
+	register_setting(
+		'sfg_maps_options',
+		'sfg_maps_options',
+		'sfg_validate_input'
+	);
+
+
+	// Stats & Notes
+
+	if( false == get_option('sfg_stats_options')) {
+		add_option('sfg_stats_options');
+	}
+
 	add_settings_section(
 		'sfg_stats_settings_section',
 		'Statistics',
 		'sfg_stats_options_callback',
 		'sfg_stats_options'
 	);
+
+	add_settings_Field(
+		'stats_pdf',
+		'Statistics & Notes PDF',
+		'sfg_stats_pdf_callback',
+		'sfg_stats_options',
+		'sfg_stats_settings_section',
+		'stats_pdf'
+	);
+
+	register_setting(
+		'sfg_stats_options',
+		'sfg_stats_options',
+		'sfg_validate_input'
+	);
+
+	// Events Schedule
+
+	if( false == get_option('sfg_schedule_options')) {
+		add_option('sfg_schedule_options');
+	}
 
 	add_settings_section(
 		'sfg_schedule_settings_section',
@@ -672,11 +720,47 @@ function sfg_dashboard_init() {
 		'sfg_schedule_options'
 	);
 
+	add_settings_field(
+		'schedule_pdf',
+		'Events Schedule PDF',
+		'sfg_schedule_pdf_callback',
+		'sfg_schedule_options',
+		'sfg_schedule_settings_section',
+		'schedule_pdf'
+	);
+
+	register_setting(
+		'sfg_schedule_options',
+		'sfg_schedule_options',
+		'sfg_validate_input'
+	);
+
+	// Logo Image
+
+	if( false == get_option('sfg_logo_options')) {
+		add_option('sfg_logo_options');
+	}
+
 	add_settings_section(
 		'sfg_logo_settings_section',
 		'Logo',
 		'sfg_logo_options_callback',
 		'sfg_logo_options'
+	);
+
+	add_settings_field(
+		'logo_img',
+		'Logo Image',
+		'sfg_logo_img_callback',
+		'sfg_logo_options',
+		'sfg_logo_settings_section',
+		'logo_img'
+	);
+
+	register_setting(
+		'sfg_logo_options',
+		'sfg_logo_options',
+		'sfg_validate_input'
 	);
 }
 add_action('admin_init', 'sfg_dashboard_init');
@@ -830,6 +914,89 @@ function sfg_maps_pdf_callback( $name ) {
 		</div>
 	';
 }
+
+// Stats & Notes Callback
+
+function sfg_stats_pdf_callback( $name ) {
+	$options = get_option('sfg_stats_options');
+	$default = plugins_url('img/default.jpg', __FILE__);
+
+	if ( !empty( $options[$name] ) ) {
+		$src = wp_get_attachment_url( $options[$name] );
+		$value = $options[$name];
+	} else {
+		$src = $default;
+		$value = '';
+	}
+
+	$text = "Change PDF";
+
+	echo '
+		<div class="upload">
+			<img src="' . $src . '" style="max-width:150px;" />
+			<div>
+				<input type="hidden" name="sfg_stats_options[' . $name . ']" id="sfg_stats_options[' . $name . ']" value="' . $value . '" />
+				<button type="submit" class="upload_image_button button">' . $text . '</button>
+			</div>
+		</div>
+	';
+}
+
+// Schedule Callback
+
+function sfg_schedule_pdf_callback( $name ) {
+	$options = get_option('sfg_schedule_options');
+	$default = plugins_url('img/default.jpg', __FILE__);
+
+	if ( !empty( $options[$name] ) ) {
+		$src = wp_get_attachment_url( $options[$name] );
+		$value = $options[$name];
+	} else {
+		$src = $default;
+		$value = '';
+	}
+
+	$text = "Change PDF";
+
+	echo '
+		<div class="upload">
+			<img src="' . $src . '" style="max-width:150px;" />
+			<div>
+				<input type="hidden" name="sfg_schedule_options[' . $name . ']" id="sfg_schedule_options[' . $name . ']" value="' . $value . '" />
+				<button type="submit" class="upload_image_button button">' . $text . '</button>
+			</div>
+		</div>
+	';
+}
+
+function sfg_logo_img_callback( $name ) {
+	$options = get_option('sfg_logo_options');
+	$default = plugins_url('img/default.jpg', __FILE__);
+
+	if ( !empty( $options[$name] ) ) {
+		$src = wp_get_attachment_image_src( $options[$name] )[0];
+		$value = $options[$name];
+	} else {
+		$src = $default;
+		$value = '';
+	}
+
+	$text = "Change Image";
+
+	echo '
+		<div class="upload">
+			<img src="' . $src . '" style="max-width:150px;" />
+			<div>
+				<input type="hidden" name="sfg_logo_options[' . $name . ']" id="sfg_logo_options[' . $name . ']" value="' . $value . '" />
+				<button type="submit" class="upload_image_button button">' . $text . '</button>
+			</div>
+		</div>
+			
+	';
+}
+
+
+
 
 // Callbacks for options headings (required for register settings default function)
 
