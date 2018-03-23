@@ -18,6 +18,17 @@ defined( 'ABSPATH' ) or die( 'You will have to try harder than that.' );
 
 $plugin_url = WP_PLUGIN_URL . '/sfg-virtual-concierge';
 
+// Enqueue Bootstrap
+
+function sfg_enqueue_bootstrap() {
+
+	wp_enqueue_style( 'sfg-bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css', array(), 20141119 );
+	wp_enqueue_script( 'sfg-bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js', array('jquery'), '20120206', true );
+}
+add_action( 'wp_enqueue_scripts', 'sfg_enqueue_bootstrap' );
+
+
+
 
 
 /*
@@ -321,7 +332,7 @@ function sfg_add_dashboard()
 		'sfg_dashboard',
 		'sfg_dashboard_display',
 		'dashicons-layout',
-		0
+		3
 	);
 }
 add_action( 'admin_menu', 'sfg_add_dashboard' );
