@@ -150,6 +150,87 @@ function sfg_comments_gravatar( $args ) {
 
 }
 
+// SFG Code
+
+
+//login and logout
+
+add_action('wp_logout','auto_redirect_after_logout');
+function auto_redirect_after_logout(){
+	wp_redirect( home_url() );
+	exit();
+}
+
+function sfg_login_form( $args = array() ) {
+	/**
+	 * taken from wp_login_form in includes/general-template.php
+	 */
+
+	$defaults = array(
+		'echo' => true,
+		// Default 'redirect' value takes the user back to the request URI.
+		'redirect' => ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
+		'form_id' => 'loginform',
+		'label_username' => __( 'Username or Email Address' ),
+		'label_password' => __( 'Password' ),
+		'label_remember' => __( 'Remember Me' ),
+		'label_log_in' => __( 'Log In' ),
+		'id_username' => 'user_login',
+		'id_password' => 'user_pass',
+		'id_remember' => 'rememberme',
+		'id_submit' => 'wp-submit',
+		'remember' => true,
+		'value_username' => '',
+		// Set 'value_remember' to true to default the "Remember me" checkbox to checked.
+		'value_remember' => false,
+	);
+
+	$args = wp_parse_args( $args, apply_filters( 'login_form_defaults', $defaults ) );
+	$login_form_top = apply_filters( 'login_form_top', '', $args );
+	$login_form_middle = apply_filters( 'login_form_middle', '', $args );
+	$login_form_bottom = apply_filters( 'login_form_bottom', '', $args );
+
+	$sfg_icon_usn = sfg_image_directory( 'usn-login.png' );
+	$sfg_icon_pw = sfg_image_directory( 'pw-login.png');
+	$sfg_icon_dd = sfg_image_directory('caret-login.png');
+
+	$sfg_select_options = '<div class="form-group"><img class="sfg-login-icon" src="' . $sfg_icon_dd . '" /><p class="sfg-dropdown-label">Suite Number</p><select name="log" id="' . esc_attr( $args['id_username'] ) . '" class="form-control" placeholder="Suite Number" value="' . esc_attr( $args['value_username'] ) . '" size="5">';
+
+	for ($i = 1; $i < 68; $i++)
+	{
+		$sfg_select_options .= '<option value="' . $i . '">' . $i .'</option>';
+	}
+
+	$sfg_select_options .= '</select></div>';
+
+
+	$form = '
+	<form name="' . $args['form_id'] . '" id="' . $args['form_id'] . '" action="' . esc_url( site_url( 'wp-login.php', 'login_post' ) ) . '" method="post">
+		' . $login_form_top . '
+		<div class="form-group">
+			<img class="sfg-login-icon" src="' . $sfg_icon_usn . '" />
+			<input type="text" name="log" id="placeholder_user" class="form-control" placeholder="Username" value="" size="20" aria-label="Username" />
+		</div>
+		<div class="form-group">
+			<img class="sfg-login-icon" src="' . $sfg_icon_pw . '" />
+			<input type="password" name="pwd" id="' . esc_attr( $args['id_password'] ) . '" class="form-control" placeholder="Password" value="" size="20" aria-label="Password" />
+		</div>
+		
+		' . $login_form_middle . $sfg_select_options . '
+		' . ( $args['remember'] ? '<p class="login-remember"><label><input name="rememberme" type="checkbox" id="' . esc_attr( $args['id_remember'] ) . '" value="forever" checked' . ( $args['value_remember'] ? ' checked="checked"' : '' ) . ' /> ' . esc_html( $args['label_remember'] ) . '</label></p>' : '' ) . '
+		<p class="login-submit">
+			<input type="submit" name="wp-submit" id="' . esc_attr( $args['id_submit'] ) . '" class="btn btn-primary" value="' . esc_attr( $args['label_log_in'] ) . '" />
+			<input type="hidden" name="redirect_to" value="' . esc_url( $args['redirect'] ) . '" />
+		</p>	
+		<p>' . $login_form_bottom . '
+	</form>';
+
+	if ( $args['echo'] )
+		echo $form;
+	else
+		return $form;
+}
+
 add_action( 'genesis_footer', 'genesis_do_footer' );
 /**
  * Echo the contents of the footer.
@@ -164,7 +245,7 @@ add_action( 'genesis_footer', 'genesis_do_footer' );
  */
 
 remove_action('genesis_footer', 'genesis_do_footer');
-add_action('genesis_footer', 'sfg_footer');
+
 function sfg_footer() {
 
 	// Build the text strings. Includes shortcodes.
@@ -181,7 +262,7 @@ function sfg_footer() {
 
 	// Only use credits if HTML5.
 	if ( genesis_html5() ) {
-		$output = '<p>' . genesis_strip_p_tags( $creds_text ) . '</p>';
+		$output = '<footer class="site-footer">' . genesis_strip_p_tags( $creds_text ) . '</footer>';
 	}
 
 	echo apply_filters( 'genesis_footer_output', $output, $backtotop_text, $creds_text );
@@ -199,4 +280,20 @@ function sfg_background_image()
 function sfg_image_directory( $filename ) {
 	$image = get_stylesheet_directory_uri() . '/images/' . $filename;
 	return $image;
+}
+
+function sfg_remove_wp() {
+	add_filter('show_admin_bar', '__return_false');
+	remove_action('wp_head', '_admin_bar_bump_cb');
+	remove_action( 'genesis_entry_content', 'genesis_do_post_content' );
+	remove_action( 'genesis_site_title', 'genesis_seo_site_title' );
+	remove_action( 'genesis_header', 'genesis_header_markup_open', 5 );
+	remove_action( 'genesis_header', 'genesis_do_header' );
+	remove_action( 'genesis_header', 'genesis_header_markup_close', 15 );
+	remove_action( 'genesis_entry_header', 'genesis_do_post_title' );
+	remove_action( 'genesis_entry_header', 'genesis_entry_header_markup_open', 5 );
+	remove_action( 'genesis_entry_header', 'genesis_entry_header_markup_close', 15 );
+	remove_action( 'genesis_entry_content', 'genesis_do_post_content' );
+	remove_action( 'genesis_post_content', 'genesis_do_post_content' );
+	remove_action( 'genesis_loop', 'genesis_do_loop' );
 }
