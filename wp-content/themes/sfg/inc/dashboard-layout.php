@@ -16,56 +16,56 @@ $logo_options = get_option( 'sfg_logo_options');
 				<h1>Touch Screen For Service </h1>
 			</div>
 			<div class="row dashboard-buttons-container">
-				<a class="col-sm-3 dashboard-button" href="#">
+				<a class="col-sm-3 dashboard-button" href="http://localhost:8888/sfgvc.com/inner/">
 					<div class="img-responsive dashboard-button-img" style="background-image:url('<?php echo sanitize_text_field( wp_get_attachment_url($home_button_options['concessions_img']) ? wp_get_attachment_url($home_button_options['concessions_img']) : ''); ?>')"></div>
 					<div class="dashboard-button-text">
 						<span>Food & Beverage</span>
 						<img src="<?php echo sfg_image_directory('hp-food.png'); ?>" class="dashboard-icon" />
 					</div>
 				</a>
-				<a class="col-sm-3 dashboard-button" href="#">
+				<a class="col-sm-3 dashboard-button" href="http://localhost:8888/sfgvc.com/inner/">
 					<div class="img-responsive dashboard-button-img" style="background-image:url('<?php echo sanitize_text_field( wp_get_attachment_url($home_button_options['tv_guide_img']) ? wp_get_attachment_url($home_button_options['tv_guide_img']) : ''); ?>')"></div>
 					<div class="dashboard-button-text">
 						<span>Tv Guide</span>
 						<img src="<?php echo sfg_image_directory('hp-tv.png'); ?>" class="dashboard-icon" />
 					</div>
 				</a>
-				<a class="col-sm-3 dashboard-button" href="#">
+				<a class="col-sm-3 dashboard-button" href="http://localhost:8888/sfgvc.com/inner/">
 					<div class="img-responsive dashboard-button-img" style="background-image:url('<?php echo sanitize_text_field( wp_get_attachment_url($home_button_options['maps_img']) ? wp_get_attachment_url($home_button_options['maps_img']) : ''); ?>')"></div>
 					<div class="dashboard-button-text">
 						<span>Maps</span>
 						<img src="<?php echo sfg_image_directory('hp-maps.png'); ?>" class="dashboard-icon" />
 					</div>
 				</a>
-				<a class="col-sm-3 dashboard-button" href="#">
+				<a class="col-sm-3 dashboard-button" href="http://localhost:8888/sfgvc.com/inner/">
 					<div class="img-responsive dashboard-button-img" style="background-image:url('<?php echo sanitize_text_field( wp_get_attachment_url($home_button_options['concierge_img']) ? wp_get_attachment_url($home_button_options['concierge_img']) : ''); ?>')"></div>
 					<div class="dashboard-button-text">
 						<span>Contact Concierge</span>
 						<img src="<?php echo sfg_image_directory('hp-concierge.png'); ?>" class="dashboard-icon" />
 					</div>
 				</a>
-				<a class="col-sm-3 dashboard-button" href="#">
+				<a class="col-sm-3 dashboard-button" href="http://localhost:8888/sfgvc.com/inner/">
 					<div class="img-responsive dashboard-button-img" style="background-image:url('<?php echo sanitize_text_field( wp_get_attachment_url($home_button_options['photog_img']) ? wp_get_attachment_url($home_button_options['photog_img']) : ''); ?>')"></div>
 					<div class="dashboard-button-text">
 						<span>Request Photographer</span>
 						<img src="<?php echo sfg_image_directory('hp-photog.png'); ?>" class="dashboard-icon" />
 					</div>
 				</a>
-				<a class="col-sm-3 dashboard-button" href="#">
+				<a class="col-sm-3 dashboard-button" href="http://localhost:8888/sfgvc.com/inner/">
 					<div class="img-responsive dashboard-button-img" style="background-image:url('<?php echo sanitize_text_field( wp_get_attachment_url($home_button_options['giants_az_img']) ? wp_get_attachment_url($home_button_options['giants_az_img']) : ''); ?>')"></div>
 					<div class="dashboard-button-text">
 						<span>Giants A-Z</span>
 						<img src="<?php echo sfg_image_directory('hp-az.png'); ?>" class="dashboard-icon" />
 					</div>
 				</a>
-				<a class="col-sm-3 dashboard-button" href="#">
+				<a class="col-sm-3 dashboard-button" href="http://localhost:8888/sfgvc.com/inner/">
 					<div class="img-responsive dashboard-button-img" style="background-image:url('<?php echo sanitize_text_field( wp_get_attachment_url($home_button_options['stats_img']) ? wp_get_attachment_url($home_button_options['stats_img']) : ''); ?>')"></div>
 					<div class="dashboard-button-text">
 						<span>Stats & Notes</span>
 						<img src="<?php echo sfg_image_directory('hp-stats.png'); ?>" class="dashboard-icon" />
 					</div>
 				</a>
-				<a class="col-sm-3 dashboard-button" href="#">
+				<a class="col-sm-3 dashboard-button" href="http://localhost:8888/sfgvc.com/inner/">
 					<div class="img-responsive dashboard-button-img" style="background-image:url('<?php echo sanitize_text_field( wp_get_attachment_url($home_button_options['events_img']) ? wp_get_attachment_url($home_button_options['events_img']) : ''); ?>')"></div>
 					<div class="dashboard-button-text">
 						<span>Events Schedule</span>

@@ -266,6 +266,24 @@ function sfg_dashboard_init() {
 	);
 
 	add_settings_field(
+		'ad1_text',
+		'Ad 1 Text',
+		'sfg_advert_text_callback',
+		'sfg_advert_options',
+		'sfg_advert_settings_section',
+		'ad1_text'
+	);
+
+	/* add_settings_field(
+		'ad1_orientation',
+		'Ad 1 Orientation',
+		'sfg_advert_radio_callback',
+		'sfg_advert_options',
+		'sfg_advert_settings_section',
+		'ad1_orientation'
+	); */
+
+	add_settings_field(
 		'ad2_url',
 		'Ad 2 Url',
 		'sfg_advert_text_callback',
@@ -281,6 +299,15 @@ function sfg_dashboard_init() {
 		'sfg_advert_options',
 		'sfg_advert_settings_section',
 		'ad2_img'
+	);
+
+	add_settings_field(
+		'ad2_text',
+		'Ad 2 Text',
+		'sfg_advert_text_callback',
+		'sfg_advert_options',
+		'sfg_advert_settings_section',
+		'ad2_text'
 	);
 
 	register_setting(
@@ -537,8 +564,25 @@ function sfg_advert_text_callback( $name) {
 	echo '<input type="text" id="' . $name . ' " name="sfg_advert_options' . '[' . $name . ']" value="' . $url . '" />';
 }
 
+function sfg_advert_radio_callback( $name ) {
+	$options = get_option('sfg_advert_options');
+	echo $options[$name];
+	$options[$name] = !empty( $options[$name]) ? 1 : 0;
+
+
+
+	$html = '<input type="radio" id="' . $name . '_1" name="sfg_advert_options[$name]" value="1"' . checked( 0, $options[$name], false ) . '/>';
+	$html .= '<label for="' . $name . '_1">Landscape</label>';
+
+	$html .= '<input type="radio" id="' . $name . '_2" name="sfg_advert_options[$name]" value="2"' . checked( 1, $options[$name], false ) . '/>';
+	$html .= '<label for="' . $name . '_2">Portrait</label>';
+
+	echo $html;
+}
+
 function sfg_advert_img_callback( $name ) {
 	$options = get_option('sfg_advert_options');
+
 	$default = plugins_url('img/default.jpg', __FILE__);
 
 	if ( !empty( $options[$name] ) ) {
@@ -782,7 +826,7 @@ function sfg_validate_input( $input ) {
 	$output = array();
 
 	foreach( $input as $key => $val ) {
-		if( isset ( $input[$key] ) ) {
+		if ( isset ( $input[$key] ) ) {
 			$output[$key] =  strip_tags( stripslashes( $input[$key] ) );
 		}
 	}

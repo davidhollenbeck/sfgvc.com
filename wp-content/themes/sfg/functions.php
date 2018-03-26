@@ -60,6 +60,8 @@ function sfg_enqueue_scripts_styles() {
 		sfg_responsive_menu_settings()
 	);
 
+	wp_enqueue_script( 'sfg', get_stylesheet_directory_uri() . "/js/sfg.js", array( 'jquery' ), CHILD_THEME_VERSION, true );
+
 }
 
 // Define our responsive menu settings.
@@ -194,7 +196,7 @@ function sfg_login_form( $args = array() ) {
 	$sfg_icon_pw = sfg_image_directory( 'pw-login.png');
 	$sfg_icon_dd = sfg_image_directory('caret-login.png');
 
-	$sfg_select_options = '<div class="form-group"><img class="sfg-login-icon" src="' . $sfg_icon_dd . '" /><p class="sfg-dropdown-label">Suite Number</p><select name="log" id="' . esc_attr( $args['id_username'] ) . '" class="form-control" placeholder="Suite Number" value="' . esc_attr( $args['value_username'] ) . '" size="5">';
+	$sfg_select_options = '<div class="form-group" id="sfg-dropdown-open"><img class="sfg-login-icon" src="' . $sfg_icon_dd . '" /><p class="sfg-dropdown-label">Suite Number</p><select name="log" id="' . esc_attr( $args['id_username'] ) . '" class="form-control" placeholder="Suite Number" value="' . esc_attr( $args['value_username'] ) . '" size="5" style="display:none;">';
 
 	for ($i = 1; $i < 68; $i++)
 	{
@@ -280,6 +282,36 @@ function sfg_background_image()
 function sfg_image_directory( $filename ) {
 	$image = get_stylesheet_directory_uri() . '/images/' . $filename;
 	return $image;
+}
+
+function sfg_sanitize( $media ) {
+	$html = sanitize_text_field( wp_get_attachment_url($media) ? wp_get_attachment_url($media) : '');
+	echo $html;
+}
+
+function sfg_image_url ($options, $id) {
+	return sanitize_text_field( wp_get_attachment_url($options[$id]) ? wp_get_attachment_url($options[$id]) : '');
+}
+
+function sfg_pdf( $options, $id, $active )  {
+	$url = sanitize_text_field( wp_get_attachment_url($options[$id]) ? wp_get_attachment_url($options[$id]) : '');
+	$active_class = ($active === true) ? 'sfg-inner-pdf-active' : '';
+
+	$html = '
+		<div class="embed-responsive embed-responsive-16by9 sfg-inner-pdf ' . $active_class . '" id="' . $id . '">
+	        <object data="' . $url . '#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0&zoom=100,0,0," type="application/pdf" class="embed-responsive-item" >
+	            hecka
+	        </object>
+	    </div>
+	   ';
+
+	echo $html;
+}
+
+function sfg_text( $options, $id) {
+	$url = $options[$id] ? sanitize_text_field($options[$id]) : '';
+
+	return $url;
 }
 
 function sfg_remove_wp() {
