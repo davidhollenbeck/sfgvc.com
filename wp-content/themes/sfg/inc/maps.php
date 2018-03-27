@@ -17,36 +17,38 @@ $advert_options = get_option( 'sfg_advert_options');
     <div class="inner-header">
         <h1>Ballpark Maps</h1>
     </div>
-	<?php sfg_pdf($maps_options, 'suite_layout_pdf', true); ?>
-	<?php sfg_pdf($maps_options, 'suite_level1_pdf', false); ?>
-	<?php sfg_pdf($maps_options, 'suite_level2_pdf', false); ?>
-	<?php sfg_pdf($maps_options, 'ballpark_pdf', false); ?>
+	<?php sfg_pdf($maps_options, 'suite_layout_pdf', true, 'map_group'); ?>
+	<?php sfg_pdf($maps_options, 'suite_level1_pdf', false, 'map_group'); ?>
+	<?php sfg_pdf($maps_options, 'suite_level2_pdf', false, 'map_group'); ?>
+	<?php sfg_pdf($maps_options, 'ballpark_pdf', false, 'map_group'); ?>
 
 </div>
 <div class="col-sm-3">
-    <div class="sfg-interface-button-container">
-        <a class="sfg-interface-button sfg-interface-active" href="#" id="maps_suite_layout_button">
-            <span>Suite Layout</span>
-        </a>
-    </div>
-    <div class="sfg-interface-button-container">
-        <a class="sfg-interface-button" href="#" id="maps_suite_level1_button">
-            <span>Suite Level 1</span>
-        </a>
-    </div>
-    <div class="sfg-interface-button-container">
-        <a class="sfg-interface-button" href="#" id="maps_suite_level2_button">
-            <span>Suite Level 2</span>
-        </a>
-    </div>
-    <div class="sfg-interface-button-container">
-        <a class="sfg-interface-button" href="#" id="maps_ballpark_button">
-            <span>Ballpark Map</span>
-        </a>
-    </div>
-    <div class="sfg-interface-button-container">
-        <a class="sfg-interface-button sfg-interface-server"  href="#" id="sfg-server">
-            <span>Request Server</span>
-        </a>
+    <div class="sfg-interface-buttons">
+        <div class="sfg-interface-button-container">
+            <a class="sfg-interface-button sfg-interface-active" href="#" id="maps_suite_layout_button">
+                <span>Suite Layout</span>
+            </a>
+        </div>
+        <div class="sfg-interface-button-container">
+            <a class="sfg-interface-button" href="#" id="maps_suite_level1_button">
+                <span>Suite Level 1</span>
+            </a>
+        </div>
+        <div class="sfg-interface-button-container">
+            <a class="sfg-interface-button" href="#" id="maps_suite_level2_button">
+                <span>Suite Level 2</span>
+            </a>
+        </div>
+        <div class="sfg-interface-button-container">
+            <a class="sfg-interface-button" href="#" id="maps_ballpark_button">
+                <span>Ballpark Map</span>
+            </a>
+        </div>
+        <div class="sfg-interface-button-container">
+            <a class="sfg-interface-button sfg-interface-server"  href="#" id="sfg-server">
+                <span>Request Server</span>
+            </a>
+        </div>
     </div>
 </div>

@@ -281,8 +281,8 @@ html {
 }
 
 .sfg-login-page img.login-logo {
-    max-width:150px;
-    height:150px;
+    max-width:300px;
+    height:300px;
 }
 
 .sfg-login-page .login-remember {
@@ -537,13 +537,19 @@ div.inner-page-active {
 }
 
 .embed-responsive.sfg-inner-pdf-active {
-    display:block;
+    display:flex;
+}
+
+div.sfg-interface-buttons {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 div.sfg-interface-button-container {
     margin:25px;
     margin-right:20%;
-    text-align:right;
+    text-align:center;
 
 
 }
@@ -602,4 +608,85 @@ a.sfg-interface-button.sfg-interface-active {
 
 .inner-ad-container:hover span {
     text-decoration:none;
+}
+
+/* FEEDBACK */
+
+div.sfg-feedback {
+    overflow:scroll;
+    height:600px;
+    position:relative;
+}
+
+.inner-header span.instructions {
+    width:100%;
+    display:block;
+    text-align:center;
+    padding-bottom:10px;
+    padding-top:10px;
+    color:#fff;
+    font-size:16px;
+    font-weight:100;
+}
+
+.sfg-feedback textarea {
+    overflow: auto;
+    resize: vertical;
+    width: 100%;
+    background: transparent;
+    border: 1px solid #fff;
+    color:#fff;
+    font-size:20px;
+    padding-left:5px;
+    padding-right:5px;
+}
+
+.sfg-feedback h2 {
+    margin-bottom:25px;
+}
+
+.sfg-feedback div {
+    margin-bottom:40px;
+}
+
+.sfg-feedback label span {
+    font-size:1.2rem;
+}
+
+.sfg-feedback .wpcf7-form-control .span.wpcf7-list-item {
+    display:block !important;
+}
+
+.sfg-feedback input[type=text] {
+    width: 100%;
+    height:50px;
+    background: transparent;
+    border: 1px solid #fff;
+    color:#fff;
+    font-size:20px;
+    padding-left:5px;
+    padding-right:5px;
+}
+
+.sfg-feedback input[type=submit] {
+    color: #fff;
+    background-color: #FD5A1E;
+    border: none;
+    font-size: 20px;
+    text-transform: uppercase;
+    font-family: "Ubuntu";
+    padding: 5px 20px;
+}
+
+.sfg-feedback .wpcf7-response-output {
+    position: fixed;
+    bottom: 200px;
+    width: 30%;
+    left: 35%;
+    padding: 20px;
+    text-align:center;
+}
+
+.sfg-feedback .wpcf7-response-output.wpcf7-mail-sent-ok {
+    border-color:#fff !important;
 }

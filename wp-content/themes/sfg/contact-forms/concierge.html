@@ -1,0 +1,26 @@
+<div class="feedback-radio">
+    <h2>Let us know what we can do for you.</h2>
+    [radio request use_label_element "Blanket/Phone Charger Request " "First Game Certificate Request " "General Questions/Send my Concierge " "Security/Maintenance/Housekeeping Issue " "Send my Server "]
+</div>
+
+
+<div class="feedback-textarea">
+    <h5>Special Instructions:</h5>
+    [textarea instructions 40x5]
+</div>
+
+<div class="feedback-contact">
+    <h2>Please provide your contact information below (optional)</h2>
+    <h5>Name</h5>
+    [text your-name size:55]
+    <h5>Company</h5>
+    [text your-company size:55]
+    <h5>Phone or email</h5>
+    [text contact-info size:55]
+</div>
+
+<div class="feedback-suite" style="display:none;">
+    [text suite id:concierge-suite]
+</div>
+
+[submit "Send"]

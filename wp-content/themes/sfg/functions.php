@@ -293,25 +293,44 @@ function sfg_image_url ($options, $id) {
 	return sanitize_text_field( wp_get_attachment_url($options[$id]) ? wp_get_attachment_url($options[$id]) : '');
 }
 
-function sfg_pdf( $options, $id, $active )  {
+function sfg_pdf( $options, $id, $active, $group = '' )  {
 	$url = sanitize_text_field( wp_get_attachment_url($options[$id]) ? wp_get_attachment_url($options[$id]) : '');
 	$active_class = ($active === true) ? 'sfg-inner-pdf-active' : '';
-
-	$html = '
-		<div class="embed-responsive embed-responsive-16by9 sfg-inner-pdf ' . $active_class . '" id="' . $id . '">
+	if (strpos($url, '.jpg') !== false) {
+		$html = '
+		<div class="embed-responsive embed-responsive-4by3 sfg-inner-pdf ' . $active_class . ' ' . $group . '" id="' . $id . '">
+			<img src="' . $url . '" class="sfg-inner-pdf" />
+		</div>
+		';
+	} else {
+		$html = '
+		<div class="embed-responsive embed-responsive-4by3 sfg-inner-pdf ' . $active_class . ' ' . $group . '" id="' . $id . '">
 	        <object data="' . $url . '#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0&zoom=100,0,0," type="application/pdf" class="embed-responsive-item" >
-	            hecka
+	            Your browser does not support PDF
 	        </object>
 	    </div>
 	   ';
+	}
 
 	echo $html;
+
+
 }
 
 function sfg_text( $options, $id) {
 	$url = $options[$id] ? sanitize_text_field($options[$id]) : '';
 
 	return $url;
+}
+
+function sfg_iframe( $url ) {
+	$html =
+	'<div class="embed-responsive embed-responsive-4by3">
+	  <iframe class="embed-responsive-item" src="' . $url . '"></iframe>
+	</div>
+	';
+
+	return $html;
 }
 
 function sfg_remove_wp() {

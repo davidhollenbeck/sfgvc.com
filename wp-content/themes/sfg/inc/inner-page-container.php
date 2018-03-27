@@ -55,7 +55,7 @@ $logo_options = get_option( 'sfg_logo_options');
 				<span><h5>Events Schedule</h5></span>
 			</a><a class="inner-button" href="#" id="feedback">
 				<span><h5>Leave Feedback</h5></span>
-			</a><a class="inner-button" href="#" id="browse">
+			</a><a class="inner-button" href="https://www.mlb.com/giants" target="_blank" id="browse">
 				<span><h5>Browse Internet</h5></span>
 			</a>
 		</div>

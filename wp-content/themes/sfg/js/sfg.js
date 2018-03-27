@@ -31,21 +31,35 @@
         $(pageUnHide).addClass('inner-page-active');
     }
 
-    function sfgInterfaceControls( pdf, button ) {
-        var currentPdf = document.getElementsByClassName('sfg-inner-pdf-active')[0];
-        $(currentPdf).removeClass('sfg-inner-pdf-active');
+    function sfgInterfaceControls( pdf, button, group ) {
+        var activePdfs = document.getElementsByClassName('sfg-inner-pdf-active');
+        for (var i = 0; i < activePdfs.length; i++) {
+            if ($(activePdfs[i]).hasClass(group)) {
+                $(activePdfs[i]).removeClass('sfg-inner-pdf-active');
+            }
+        }
         var newPdf = document.getElementById(pdf);
         $(newPdf).addClass('sfg-inner-pdf-active');
-        alert(pdf);
+
+
+        var currentButton = document.getElementsByClassName('sfg-interface-active');
+        $(currentButton).removeClass('sfg-interface-active');
+        var newButton = document.getElementById(button);
+        $(newButton).addClass('sfg-interface-active');
 
     }
 
     $(document).ready(function(){
         $('#sfg-dropdown-open').click(function() {
-            sfgOpenDropDown('sfg-dropdown-open', 2);
+            sfgOpenTab('sfg-dropdown-open', 2);
         });
 
         // tabs
+
+        if (window.location.hash) {
+            var hash = window.location.hash.substring(1);
+            sfgOpenTab(hash);
+        }
 
         $('#food-beverage').click(function() {
             sfgOpenTab('food-beverage');
@@ -83,22 +97,40 @@
             sfgOpenTab('feedback');
         });
 
-        $('#browse').click(function() {
-            sfgOpenTab('browse');
-        });
-    });
-
-    $(window).ready(function(){
         // food bev pdfs
 
         $('#food_pdf_button').click(function() {
-            sfgInterfaceControls('food_pdf', 'food_pdf_button');
+            sfgInterfaceControls('food_pdf', 'food_pdf_button', 'food_group');
         });
 
         $('#beverage_pdf_button').click(function() {
-            sfgInterfaceControls('beverage_pdf', 'beverage_pdf_button');
+            sfgInterfaceControls('beverage_pdf', 'beverage_pdf_button', 'food_group');
         });
+
+        // maps pdfs
+
+        $('#maps_suite_layout_button').click(function() {
+            sfgInterfaceControls('suite_layout_pdf', 'maps_suite_layout_button', 'map_group');
+        });
+
+        $('#maps_suite_level1_button').click(function() {
+            sfgInterfaceControls('suite_level1_pdf', 'maps_suite_level1_button', 'map_group');
+        });
+
+        $('#maps_suite_level2_button').click(function() {
+            sfgInterfaceControls('suite_level2_pdf', 'maps_suite_level2_button', 'map_group');
+        });
+
+        $('#maps_ballpark_button').click(function() {
+            sfgInterfaceControls('ballpark_pdf', 'maps_ballpark_button', 'map_group');
+        });
+
     });
+
+    $(window).ready(function(){
+
+    });
+
 
 })( jQuery );
 

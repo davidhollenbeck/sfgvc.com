@@ -17,24 +17,26 @@
     <div class="inner-header">
         <h1>Food & Beverage</h1>
     </div>
-    <?php sfg_pdf($concessions_options, 'food_pdf', true); ?>
-    <?php sfg_pdf($concessions_options, 'beverage_pdf', false); ?>
+    <?php sfg_pdf($concessions_options, 'food_pdf', true, 'food_group'); ?>
+    <?php sfg_pdf($concessions_options, 'beverage_pdf', false, 'food_group'); ?>
 
 </div>
 <div class="col-sm-3">
-    <div class="sfg-interface-button-container">
-        <a class="sfg-interface-button sfg-interface-active" href="#" id="food_pdf_button">
-            <span>Food Menu</span>
-        </a>
-    </div>
-    <div class="sfg-interface-button-container">
-        <a class="sfg-interface-button" href="#" id="beverage_pdf_button">
-            <span>Drinks Menu</span>
-        </a>
-    </div>
-    <div class="sfg-interface-button-container">
-        <a class="sfg-interface-button sfg-interface-server"  href="#" id="sfg-server">
-            <span>Request Server</span>
-        </a>
+    <div class="sfg-interface-buttons">
+        <div class="sfg-interface-button-container">
+            <a class="sfg-interface-button sfg-interface-active" href="#" id="food_pdf_button">
+                <span>Food Menu</span>
+            </a>
+        </div>
+        <div class="sfg-interface-button-container">
+            <a class="sfg-interface-button" href="#" id="beverage_pdf_button">
+                <span>Drinks Menu</span>
+            </a>
+        </div>
+        <div class="sfg-interface-button-container">
+            <a class="sfg-interface-button sfg-interface-server"  href="#" id="sfg-server">
+                <span>Request Server</span>
+            </a>
+        </div>
     </div>
 </div>

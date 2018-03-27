@@ -21,9 +21,11 @@ $advert_options = get_option( 'sfg_advert_options');
 
 </div>
 <div class="col-sm-3">
-    <div class="sfg-interface-button-container">
-        <a class="sfg-interface-button sfg-interface-server"  href="#" id="sfg-server">
-            <span>Request Server</span>
-        </a>
+    <div class="sfg-interface-buttons">
+        <div class="sfg-interface-button-container">
+            <a class="sfg-interface-button sfg-interface-server"  href="#" id="sfg-server">
+                <span>Request Server</span>
+            </a>
+        </div>
     </div>
 </div>
